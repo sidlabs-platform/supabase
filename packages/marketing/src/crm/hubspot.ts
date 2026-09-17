@@ -39,10 +39,10 @@ export class HubSpotClient {
     if (!config.portalId) throw new Error('HubSpotClient: portalId is required')
     if (!config.formGuid) throw new Error('HubSpotClient: formGuid is required')
     if (!PORTAL_ID_PATTERN.test(config.portalId)) {
-      throw new Error('HubSpotClient: portalId is invalid')
+      throw new Error('HubSpotClient: portalId is invalid, expected a numeric HubSpot account ID')
     }
     if (!FORM_GUID_PATTERN.test(config.formGuid)) {
-      throw new Error('HubSpotClient: formGuid is invalid')
+      throw new Error('HubSpotClient: formGuid is invalid, expected a UUID')
     }
 
     this.portalId = config.portalId

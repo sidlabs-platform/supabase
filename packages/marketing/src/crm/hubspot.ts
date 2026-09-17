@@ -25,6 +25,12 @@ export interface HubSpotConfig {
   formGuid: string
 }
 
+// HubSpot portal IDs are numeric account identifiers.
+const PORTAL_ID_PATTERN = /^[0-9]+$/
+// HubSpot form GUIDs are UUIDs.
+const FORM_GUID_PATTERN =
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+
 export class HubSpotClient {
   private portalId: string
   private formGuid: string
@@ -32,6 +38,12 @@ export class HubSpotClient {
   constructor(config: HubSpotConfig) {
     if (!config.portalId) throw new Error('HubSpotClient: portalId is required')
     if (!config.formGuid) throw new Error('HubSpotClient: formGuid is required')
+    if (!PORTAL_ID_PATTERN.test(config.portalId)) {
+      throw new Error('HubSpotClient: portalId is invalid')
+    }
+    if (!FORM_GUID_PATTERN.test(config.formGuid)) {
+      throw new Error('HubSpotClient: formGuid is invalid')
+    }
 
     this.portalId = config.portalId
     this.formGuid = config.formGuid

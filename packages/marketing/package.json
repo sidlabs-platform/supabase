@@ -10,11 +10,14 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "clean": "rimraf node_modules"
+    "clean": "rimraf node_modules",
+    "test": "vitest run"
   },
   "devDependencies": {
     "tsconfig": "workspace:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@types/react": "catalog:",

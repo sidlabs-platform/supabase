@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { supabase } from '@/lib/initSupabase'
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
 import TodoList from '@/components/TodoList'
 import { Session } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'

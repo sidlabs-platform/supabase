@@ -11,8 +11,6 @@ describe('isValidEdgeFunctionURL', () => {
   ]
 
   const validLocalEdgeFunctionsUrls = [
-    'https://projectref.notsupabase.com/functions/v1/test',
-    'https://notsupabase.com/functions/v1/test',
     'http://localhost:54321/functions/v1/test-2',
     'http://kong:8000/functions/v1/hello-world',
     'https://127.0.0.1:54321/functions/v1/test-3',
@@ -28,9 +26,13 @@ describe('isValidEdgeFunctionURL', () => {
   ]
 
   const invalidEdgeFunctionUrls = [
+    'https://projectref.notsupabase.com/functions/v1/test',
+    'https://notsupabase.com/functions/v1/test',
     'https://localhost?https://aaaa.supabase.co/functions/v1/xxx',
     'https://localhost:3000/?https://aaaa.supabase.co/functions/v1/xxx',
     'http://localhost:3000/?https://aaaa.supabase.co/functions/v1/xxx',
+    'http://localhost:3000/functions/v1/test',
+    'http://localhost@evil.example/functions/v1/test',
   ]
 
   it('should match valid edge function URLs on platform', () => {
@@ -62,6 +64,20 @@ describe('isValidEdgeFunctionURL', () => {
   it('should not match invalid edge function URLs off platform', () => {
     for (const url of invalidEdgeFunctionUrls) {
       expect(isValidEdgeFunctionURL(url, false), `Expected ${url} to be invalid`).toBe(false)
+    }
+  })
+
+  it('should match the configured self-hosted Supabase URL', () => {
+    const previousUrl = process.env.SUPABASE_URL
+    process.env.SUPABASE_URL = 'https://supabase.example.com'
+
+    try {
+      expect(
+        isValidEdgeFunctionURL('https://supabase.example.com/functions/v1/test', false)
+      ).toBe(true)
+    } finally {
+      if (previousUrl === undefined) delete process.env.SUPABASE_URL
+      else process.env.SUPABASE_URL = previousUrl
     }
   })
 })

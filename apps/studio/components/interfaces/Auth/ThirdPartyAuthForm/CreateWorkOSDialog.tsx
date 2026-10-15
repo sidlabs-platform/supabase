@@ -33,7 +33,7 @@ interface CreateWorkOSIntegrationProps {
 const FORM_ID = 'create-work-os-integration-form'
 
 const WORKOS_ISSUER =
-  /^https:\/\/(api.workos.com|[a-zA-Z0-9-]+([.][a-zA-Z0-9-]+){2,})\/(sso|user_management)\/(client|project)_[0-7][0-9A-HJKMNP-TV-Z]{25}\/?$/
+  /^https:\/\/(api\.workos\.com|[a-zA-Z0-9-]+([.][a-zA-Z0-9-]+){2,})\/(sso|user_management)\/(client|project)_[0-7][0-9A-HJKMNP-TV-Z]{25}\/?$/
 
 const FormSchema = z.object({
   enabled: z.boolean(),

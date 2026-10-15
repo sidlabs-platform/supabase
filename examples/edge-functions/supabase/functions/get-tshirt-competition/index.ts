@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
     const answer = url.searchParams.get('answer')
 
     if (
-      !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email ?? '') ||
+      !/^[^@\s]+@[^@.\s]+(?:\.[^@.\s]+)+$/.test(email ?? '') ||
       !answer ||
       !twitter ||
       !size

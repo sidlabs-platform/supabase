@@ -5,6 +5,15 @@ import { cn } from 'ui'
 
 import { IntegrationDefinition } from '../Landing/Integrations.constants'
 
+const hasHostname = (url: string, domain: string) => {
+  try {
+    const hostname = new URL(url).hostname
+    return hostname === domain || hostname.endsWith(`.${domain}`)
+  } catch {
+    return false
+  }
+}
+
 interface BuiltBySectionProps extends ComponentPropsWithoutRef<'div'> {
   integration: IntegrationDefinition
   status?: string | ReactNode
@@ -45,9 +54,10 @@ export const BuiltBySection = forwardRef<ElementRef<'div'>, BuiltBySectionProps>
               className="text-foreground-light hover:text-foreground text-sm flex items-center gap-2"
             >
               <Book size={16} />
-              {docsUrl.includes('supabase.com/docs')
+              {hasHostname(docsUrl, 'supabase.com') &&
+              new URL(docsUrl).pathname.startsWith('/docs')
                 ? 'Supabase Docs'
-                : docsUrl.includes('github.com')
+                : hasHostname(docsUrl, 'github.com')
                   ? 'GitHub Docs'
                   : 'Documentation'}
             </Link>

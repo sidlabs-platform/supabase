@@ -306,7 +306,7 @@ export const AwsMarketplaceLinkExistingOrg = ({
         visible={orgLinkedSuccessfully}
         onClose={() => {
           setOrgLinkedSuccessfully(false)
-          router.push(`/org/${orgToRedirectTo}`)
+          router.push(`/org/${encodeURIComponent(orgToRedirectTo)}`)
         }}
       />
 

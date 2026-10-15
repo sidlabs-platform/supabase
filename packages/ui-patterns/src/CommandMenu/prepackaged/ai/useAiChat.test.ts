@@ -185,6 +185,18 @@ More content.`)
     ])
   })
 
+  it('should handle long whitespace around the sources section', () => {
+    const whitespace = ' '.repeat(10000)
+    const content = `Answer here.\n\n### Sources${whitespace}\n- /guides/auth\n${whitespace}`
+
+    const result = parseSourcesFromContent(content)
+
+    expect(result.cleanedContent).toBe('Answer here.')
+    expect(result.sources).toEqual([
+      { path: '/guides/auth', url: 'https://supabase.com/docs/guides/auth' },
+    ])
+  })
+
   it('should handle content with only a sources section', () => {
     const content = `### Sources
 - /guides/auth

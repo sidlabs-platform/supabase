@@ -4,6 +4,10 @@ import * as OTPAuth from 'otpauth'
 import { chromium, Page } from '@playwright/test'
 import { STORAGE_STATE_PATH } from '../../env.config.js'
 
+const SUPABASE_DOMAINS = ['supabase.com', 'supabase.io', 'supabase.green', 'supabase.red']
+const isSupabaseHostname = (hostname: string) =>
+  SUPABASE_DOMAINS.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))
+
 export interface GitHubAuthentication {
   page: Page
   githubTotp: string
@@ -110,14 +114,11 @@ const loginWithGithub = async ({
     console.log('Waiting for redirect after 2FA...')
     await page.waitForURL(
       (url) => {
-        const href = url.href
+        const hostname = url.hostname
         // Either GitHub authorization page or redirect to Supabase
         return (
-          href.includes('github.com/login/oauth/authorize') ||
-          href.includes('supabase.com') ||
-          href.includes('supabase.io') ||
-          href.includes('supabase.green') ||
-          href.includes('supabase.red')
+          (hostname === 'github.com' && url.pathname === '/login/oauth/authorize') ||
+          isSupabaseHostname(hostname)
         )
       },
       { timeout: 30000 }
@@ -141,11 +142,7 @@ const loginWithGithub = async ({
 
       // Wait for redirect to Supabase after clicking authorize
       await page.waitForURL(
-        (url) =>
-          url.href.includes('supabase.com') ||
-          url.href.includes('supabase.io') ||
-          url.href.includes('supabase.green') ||
-          url.href.includes('supabase.red'),
+        (url) => isSupabaseHostname(url.hostname),
         { timeout: 30000 }
       )
     } else {

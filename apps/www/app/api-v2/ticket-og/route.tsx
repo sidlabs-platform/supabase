@@ -34,6 +34,10 @@ export async function GET(req: Request) {
 
   try {
     if (!username) throw new Error('missing username param')
+    if (username === '.' || username === '..' || /[\\/]/.test(username)) {
+      throw new Error('invalid username')
+    }
+    const encodedUsername = encodeURIComponent(username)
 
     const supabaseAdminClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -485,19 +489,23 @@ export async function GET(req: Request) {
     // Upload image to storage.
     const { error: storageError } = await supabaseAdminClient.storage
       .from('images')
-      .upload(`launch-week/lw15/og/${ticketType}/${username}.png`, generatedTicketImage.body!, {
-        contentType: 'image/png',
-        // cacheControl: `${60 * 60 * 24 * 7}`,
-        cacheControl: `0`,
-        // Update cached og image, people might need to update info
-        upsert: true,
-      })
+      .upload(
+        `launch-week/lw15/og/${ticketType}/${encodedUsername}.png`,
+        generatedTicketImage.body!,
+        {
+          contentType: 'image/png',
+          // cacheControl: `${60 * 60 * 24 * 7}`,
+          cacheControl: `0`,
+          // Update cached og image, people might need to update info
+          upsert: true,
+        }
+      )
 
     if (storageError) throw new Error(`storageError: ${storageError.message}`)
 
     const NEW_TIMESTAMP = new Date()
 
-    return await fetch(`${STORAGE_URL}/og/${ticketType}/${username}.png?t=${NEW_TIMESTAMP}`)
+    return await fetch(`${STORAGE_URL}/og/${ticketType}/${encodedUsername}.png?t=${NEW_TIMESTAMP}`)
   } catch (error: any) {
     Sentry.captureException(error)
     await Sentry.flush(2000)

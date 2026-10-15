@@ -24,8 +24,14 @@ async function isStripeSyncEnabled() {
 function getBearerToken(req: NextApiRequest) {
   const authHeader = req.headers.authorization
   if (!authHeader || Array.isArray(authHeader)) return null
-  const match = authHeader.match(/^Bearer\s+(.+)$/i)
-  return match?.[1]?.trim() ?? null
+  const separatorIndex = authHeader.search(/\s/)
+  if (
+    separatorIndex < 0 ||
+    authHeader.slice(0, separatorIndex).toLowerCase() !== 'bearer'
+  ) {
+    return null
+  }
+  return authHeader.slice(separatorIndex).trim() || null
 }
 
 export const config = {

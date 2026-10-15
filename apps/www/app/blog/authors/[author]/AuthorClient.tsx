@@ -30,10 +30,18 @@ interface AuthorClientProps {
 
 export default function AuthorClient({ author, authorId, blogs }: AuthorClientProps) {
   const { BLOG_VIEW } = LOCAL_STORAGE_KEYS
+  let authorUrlHostname = ''
+  try {
+    authorUrlHostname = author?.author_url ? new URL(author.author_url).hostname : ''
+  } catch {
+    authorUrlHostname = ''
+  }
   const localView = isBrowser ? (localStorage?.getItem(BLOG_VIEW) as BlogView) : undefined
   const [view, setView] = useState<BlogView>(localView ?? 'list')
   const [searchTerm, setSearchTerm] = useState('')
   const isList = view === 'list'
+  const isAuthorUrlHost = (domain: string) =>
+    authorUrlHostname === domain || authorUrlHostname.endsWith(`.${domain}`)
 
   const filteredBlogs = useMemo(() => {
     if (!searchTerm) return blogs
@@ -84,12 +92,11 @@ export default function AuthorClient({ author, authorId, blogs }: AuthorClientPr
                   target="_blank"
                   className="text-brand hover:underline text-sm"
                 >
-                  {author.author_url.includes('github.com')
+                  {isAuthorUrlHost('github.com')
                     ? 'GitHub'
-                    : author.author_url.includes('twitter.com') ||
-                        author.author_url.includes('x.com')
+                    : isAuthorUrlHost('twitter.com') || isAuthorUrlHost('x.com')
                       ? 'Twitter'
-                      : author.author_url.includes('linkedin.com')
+                      : isAuthorUrlHost('linkedin.com')
                         ? 'LinkedIn'
                         : 'Website'}
                 </Link>

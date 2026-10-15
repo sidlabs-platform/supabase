@@ -31,7 +31,7 @@ function getBearerToken(req: NextApiRequest) {
   ) {
     return null
   }
-  return authHeader.slice(separatorIndex).trim() || null
+  return authHeader.slice(separatorIndex + 1).trim() || null
 }
 
 export const config = {

@@ -54,7 +54,7 @@ export default function Chat() {
       .concat(is_self_classes)
       .concat(is_system_classes)
     bubble.classList.add(...style)
-    bubble.innerHTML = message
+    bubble.textContent = message
     document.getElementById('chat')!.appendChild(bubble)
   }
 

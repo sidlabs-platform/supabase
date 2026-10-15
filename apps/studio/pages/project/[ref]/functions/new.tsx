@@ -156,7 +156,9 @@ const NewFunctionPage = () => {
       // to prevent unnecessary dialog about unsaved changes
       setTimeout(() => {
         if (ref && functionName) {
-          router.push(`/project/${ref}/functions/${functionName}/details`)
+          router.push(
+            `/project/${encodeURIComponent(ref)}/functions/${encodeURIComponent(functionName)}/details`
+          )
         }
       }, 150)
     },

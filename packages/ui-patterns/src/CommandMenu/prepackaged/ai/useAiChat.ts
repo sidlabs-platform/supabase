@@ -12,7 +12,9 @@ export function parseSourcesFromContent(content: string): {
   sources: SourceLink[]
 } {
   // Only match Sources section at the very end of the message
-  const sourcesMatch = content.match(/### Sources\s*(?:\n((?:- [^\n]+\n?)*))?\s*$/)
+  const sourcesMatch = content.match(
+    /### Sources[ \t\r]*(?:\n((?:[ \t\r]*\n)*(?:- [^\n]+\n?)*))?(?:[ \t\r]*\n)*[ \t\r]*$/
+  )
 
   let cleanedContent = content
   const sources: SourceLink[] = []

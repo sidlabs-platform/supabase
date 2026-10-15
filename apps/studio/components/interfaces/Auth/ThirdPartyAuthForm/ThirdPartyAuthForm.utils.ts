@@ -16,22 +16,36 @@ export const getIntegrationType = (integration?: ThirdPartyAuthIntegration): INT
     return 'workos'
   }
 
+  const issuerUrl = (() => {
+    try {
+      return integration?.oidc_issuer_url ? new URL(integration.oidc_issuer_url) : undefined
+    } catch {
+      return undefined
+    }
+  })()
+
   // TODO(hf): Move these to check type as well.
-  if (integration?.oidc_issuer_url?.startsWith('https://securetoken.google.com/')) {
+  if (issuerUrl?.protocol === 'https:' && issuerUrl.hostname === 'securetoken.google.com') {
     return 'firebase'
   }
 
-  if (integration?.oidc_issuer_url?.includes('amazonaws.com')) {
+  if (
+    issuerUrl?.protocol === 'https:' &&
+    (issuerUrl.hostname === 'amazonaws.com' || issuerUrl.hostname.endsWith('.amazonaws.com'))
+  ) {
     return 'awsCognito'
   }
 
-  if (integration?.oidc_issuer_url?.includes('auth0.com')) {
+  if (
+    issuerUrl?.protocol === 'https:' &&
+    (issuerUrl.hostname === 'auth0.com' || issuerUrl.hostname.endsWith('.auth0.com'))
+  ) {
     return 'auth0'
   }
 
   if (
-    integration?.oidc_issuer_url?.includes('.clerk.accounts.dev') ||
-    integration?.oidc_issuer_url?.startsWith('https://clerk.')
+    issuerUrl?.protocol === 'https:' &&
+    (issuerUrl.hostname.endsWith('.clerk.accounts.dev') || issuerUrl.hostname.startsWith('clerk.'))
   ) {
     return 'clerk'
   }

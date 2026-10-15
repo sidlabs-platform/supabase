@@ -81,10 +81,11 @@ export const CreateQueueSheet = ({ visible, onClose }: CreateQueueSheetProps) =>
       toast.error('Project not found')
       return
     }
+    const projectRef = project.ref
 
     createQueue(
       {
-        projectRef: project.ref,
+        projectRef,
         connectionString: project?.connectionString,
         name,
         enableRls,
@@ -100,7 +101,9 @@ export const CreateQueueSheet = ({ visible, onClose }: CreateQueueSheetProps) =>
       {
         onSuccess: () => {
           toast.success(`Successfully created queue ${name}`)
-          router.push(`/project/${project?.ref}/integrations/queues/queues/${name}`)
+          router.push(
+            `/project/${encodeURIComponent(projectRef)}/integrations/queues/queues/${encodeURIComponent(name)}`
+          )
           onClose()
         },
       }

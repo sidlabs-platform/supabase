@@ -44,8 +44,8 @@ export const getIntegrationType = (integration?: ThirdPartyAuthIntegration): INT
   }
 
   if (
-    (issuerUrl?.hostname.endsWith('.clerk.accounts.dev') ?? false) ||
-    (issuerUrl?.protocol === 'https:' && issuerUrl.hostname.startsWith('clerk.'))
+    issuerUrl?.protocol === 'https:' &&
+    (issuerUrl.hostname.endsWith('.clerk.accounts.dev') || issuerUrl.hostname.startsWith('clerk.'))
   ) {
     return 'clerk'
   }

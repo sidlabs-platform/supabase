@@ -14,6 +14,17 @@ const hasHostname = (url: string, domain: string) => {
   }
 }
 
+const isSupabaseDocsUrl = (url: string) => {
+  try {
+    const parsedUrl = new URL(url)
+    const isSupabaseHostname =
+      parsedUrl.hostname === 'supabase.com' || parsedUrl.hostname.endsWith('.supabase.com')
+    return isSupabaseHostname && parsedUrl.pathname.startsWith('/docs')
+  } catch {
+    return false
+  }
+}
+
 interface BuiltBySectionProps extends ComponentPropsWithoutRef<'div'> {
   integration: IntegrationDefinition
   status?: string | ReactNode
@@ -54,8 +65,7 @@ export const BuiltBySection = forwardRef<ElementRef<'div'>, BuiltBySectionProps>
               className="text-foreground-light hover:text-foreground text-sm flex items-center gap-2"
             >
               <Book size={16} />
-              {hasHostname(docsUrl, 'supabase.com') &&
-              new URL(docsUrl).pathname.startsWith('/docs')
+              {isSupabaseDocsUrl(docsUrl)
                 ? 'Supabase Docs'
                 : hasHostname(docsUrl, 'github.com')
                   ? 'GitHub Docs'
